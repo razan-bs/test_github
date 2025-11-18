@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini-jeu Simon</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 50px;
+    }
+
+        #game {
+        display: grid;
+        grid-template-columns: repeat(2, 100px);
+        grid-gap: 20px;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+    .color {
+        width: 100px;
+        height: 100px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: transform 0.2s, opacity 0.2s;
+    }
+
+    #red { background-color: red; }
+    #green { background-color: green; }
+    #blue { background-color: blue; }
+    #yellow { background-color: yellow; }
+
+    #score-container {
+        margin: 20px 0;
+    }
+
+    .color.active {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+    #start {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+  <h1>Mini-Jeu de Séquences</h1>
+  <div id="game">
+    <div class="color" id="red"></div>
+    <div class="color" id="green"></div>
+    <div class="color" id="blue"></div>
+    <div class="color" id="yellow"></div>
+  </div>
+  <div id="score-container">
+    <p>Score : <span id="score">0</span></p>
+    <p>Meilleur score : <span id="highscore">0</span></p>
+  </div>
+  <button id="start">Commencer</button>
+
+</body>
+<script>
+  const colors = ['red', 'green', 'blue', 'yellow'];
+  let sequence = []; //sequence du jeu
+  let userSequence = [];// sequence faite par lutilisateur
+  let score = 0;
+  let highScore;
+
+  if (localStorage.getItem('highScore') !== null) {
+    highScore = localStorage.getItem('highScore');
+  } else {
+    highScore = 0;
+  }
+
+  document.getElementById('highscore').textContent = highScore;
+
+  const startButton = document.getElementById('start');
+  startButton.addEventListener('click', startGame);
+
+  function startGame() {
+    sequence = [];
+    userSequence = [];
+    score = 0;
+    document.getElementById('score').textContent = score;
+    nextRound();
+    }
+
+  function nextRound() {
+    userSequence = [];
+    const nextColor = colors[Math.floor(Math.random() * colors.length)];
+    sequence.push(nextColor);
+    playSequence();
+  }
+
+  function playSequence() {
+    let i = 0;
+    const interval = setInterval(() => {
+      const color = sequence[i];
+      const element = document.getElementById(color);
+      element.classList.add('active');
+      setTimeout(() => element.classList.remove('active'), 500);
+      i++;
+      if(i >= sequence.length) clearInterval(interval);
+      }, 700);
+    }
+  const colorButtons = document.querySelectorAll('.color');
+  colorButtons.forEach(btn => {
+    btn.addEventListener('click', () => handleUserClick(btn.id));
+  });
+
+  function handleUserClick(color) {
+    userSequence.push(color);
+    animateClick(color);
+
+    const currentIndex = userSequence.length - 1;
+    if(userSequence[currentIndex] !== sequence[currentIndex]) {
+      alert('Erreur ! Jeu terminé.');
+      updateHighScore();
+      return;
+    }
+
+    if(userSequence.length === sequence.length) {
+      score++;
+      document.getElementById('score').textContent = score;
+      setTimeout(nextRound, 1000);
+    }
+  }
+
+  function animateClick(color) {
+    const element = document.getElementById(color);
+    element.classList.add('active');
+    setTimeout(() => element.classList.remove('active'), 200);
+  }
+
+  function updateHighScore() {
+    if(score > highScore) {
+      highScore = score;
+      localStorage.setItem('highScore', highScore);
+      document.getElementById('highscore').textContent = highScore;
+    }
+  }
+  </script>
+</html>
