@@ -8,14 +8,17 @@
         font-family: Arial, sans-serif;
         text-align: center;
         margin: 50px;
+         background: #f2f2f2; 
+        color: #333;
     }
 
-        #game {
-        display: grid;
-        grid-template-columns: repeat(2, 100px);
-        grid-gap: 20px;
-        justify-content: center;
-        margin: 20px 0;
+
+    #game {
+      display: grid;
+      grid-template-columns: repeat(2, 100px);
+      grid-gap: 20px;
+      justify-content: center;
+      margin: 20px 0;
     }
 
     .color {
@@ -23,26 +26,39 @@
         height: 100px;
         border-radius: 10px;
         cursor: pointer;
-        transition: transform 0.2s, opacity 0.2s;
+        transition: transform 0.2s, opacity 0.2s, box-shadow 0.3s;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-    #red { background-color: red; }
-    #green { background-color: green; }
-    #blue { background-color: blue; }
-    #yellow { background-color: yellow; }
+    #red { background-color:#ff6b6b;}
+    #green { background-color: #6bcf6b; }
+    #blue { background-color: #6b9eff;  }
+    #yellow { background-color:#ffeb6b; }
+    .color:hover {
+      transform: scale(1.15) ;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+      filter: brightness(1.1);
+    }
 
     #score-container {
         margin: 20px 0;
+        font-size:18px;
     }
 
     .color.active {
         transform: scale(1.1);
         opacity: 0.7;
     }
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1.1); }
+    }
     #start {
         padding: 10px 20px;
-        font-size: 16px;
+        font-size: 18px;
         cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
     }
 </style>
 </head>
@@ -93,7 +109,6 @@
     sequence.push(nextColor);
     playSequence();
   }
-
   function playSequence() {
     let i = 0;
     const interval = setInterval(() => {
