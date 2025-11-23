@@ -5,11 +5,11 @@
   <title>Mini-jeu Simon</title>
   <style>
     body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        margin: 50px;
-         background: #f2f2f2; 
-        color: #333;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 50px;
+      background: #f2f2f2; 
+      color: #333;
     }
 
 
@@ -109,13 +109,21 @@
     sequence.push(nextColor);
     playSequence();
   }
+  function speak(word) {
+    const utterance = new SpeechSynthesisUtterance(word);
+    utterance.lang = 'en-US'; 
+    utterance.rate = 1.35;     
+    speechSynthesis.speak(utterance);
+}
   function playSequence() {
     let i = 0;
     const interval = setInterval(() => {
       const color = sequence[i];
       const element = document.getElementById(color);
       element.classList.add('active');
+      
       setTimeout(() => element.classList.remove('active'), 500);
+      speak(color);
       i++;
       if(i >= sequence.length) clearInterval(interval);
       }, 700);
@@ -146,6 +154,7 @@
   function animateClick(color) {
     const element = document.getElementById(color);
     element.classList.add('active');
+    speak(color);
     setTimeout(() => element.classList.remove('active'), 200);
   }
 
